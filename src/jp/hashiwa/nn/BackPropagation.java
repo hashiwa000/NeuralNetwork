@@ -1,6 +1,5 @@
 package jp.hashiwa.nn;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -93,22 +92,5 @@ public class BackPropagation implements LearningAlgorithm {
     }
 
     return sum * actual * (1 - actual);
-  }
-
-  private double[][] getOutputs() {
-    double[][] results = new double[graph.getHiddenNodeLayerSize()+1][];
-
-    for (int i=0 ; i<graph.getHiddenNodeLayerSize() ; i++) {
-      results[i] = new double[graph.getHiddenNodeNum(i)];
-      for (int j=0 ; j<graph.getHiddenNodeNum(i) ; j++) {
-        results[i][j] = graph.getHiddenNode(i, j).getValue();
-      }
-    }
-
-    results[results.length-1] = new double[graph.getOutputNodeNum()];
-    for (int k=0 ; k<graph.getOutputNodeNum() ; k++)
-      results[results.length-1][k] = graph.getOutputNode(k).getValue();
-
-    return results;
   }
 }

@@ -45,16 +45,6 @@ public class Main {
   }
 
   void learn(double[][] dataAndExpected) {
-//    boolean finished = false;
-//    for (int i=0 ; i<MAX_LEARN_LOOP && !finished ; i++) {
-//      finished = true;
-//      for (double[] d: data) {
-//        finished &= learnOne(d[0], d[1], d[2]);
-//      }
-//    }
-//
-//    System.out.println("finished = " + finished);
-
     List<double[]> data = Arrays.stream(dataAndExpected).
             map(d -> new double[] {d[0], d[1]}).
             collect(Collectors.toList());
@@ -64,23 +54,6 @@ public class Main {
 
     graph.learn(data, expected);
   }
-
-//  boolean learnOne(double x, double y, double expected) {
-//    setInputs(x, y);
-//    return graph.getOutputNode(0).learnUsingExpectedValue(expected);
-//  }
-//
-//  double calculate(double x, double y) {
-//    setInputs(x, y);
-//    return graph.getOutputNode(0).getValue();
-//  }
-//
-//  void setInputs(double x, double y) {
-//    NNNode value0 = new NNInputNode(x);
-//    NNNode value1 = new NNInputNode(y);
-//
-//    graph.setInputNodes(value0, value1);
-//  }
 
   public static void main(String[] args) throws Exception {
     Main main = new Main();

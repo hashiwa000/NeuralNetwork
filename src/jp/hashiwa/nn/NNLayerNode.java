@@ -1,7 +1,5 @@
 package jp.hashiwa.nn;
 
-import java.util.Arrays;
-
 /**
  * Created by Hashiwa on 2015/06/29.
  */
@@ -68,11 +66,6 @@ public abstract class NNLayerNode extends NNNode {
 
   protected NNNode[] getInputs() {
     return inputs;
-  }
-
-  protected double sigDeviation(double x) {
-    double sig0 = sigmoid(x);
-    return sig0 * (1-sig0);
   }
 
   protected double sigmoid(double x) {
