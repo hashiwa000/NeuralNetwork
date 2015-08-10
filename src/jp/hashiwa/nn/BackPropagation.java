@@ -80,18 +80,6 @@ public class BackPropagation implements LearningAlgorithm {
     return sum * actual * (1 - actual);
   }
 
-  private double calc(double x, double y) {
-    setInputs(x, y);
-    return graph.getOutputNode(0).getValue();
-  }
-
-  private void setInputs(double x, double y) {
-    NNNode value0 = new NNInputNode(x);
-    NNNode value1 = new NNInputNode(y);
-
-    graph.setInputNodes(value0, value1);
-  }
-
   private double[][] getOutputs() {
     double[][] results = new double[graph.getHiddenNodeLayerSize()+1][];
 
