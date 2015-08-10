@@ -8,7 +8,6 @@ import java.util.Arrays;
 public abstract class NNLayerNode extends NNNode {
   private final NNNode[] inputs;
   private final double[] weights;
-  private NNNode output;
 //  private Double cache = null;
 
   public NNLayerNode(int nodeNum) {
@@ -44,7 +43,7 @@ public abstract class NNLayerNode extends NNNode {
     return v;
   }
 
-  public int getNodeNum() {
+  public int getInputNodeNum() {
     return inputs.length - 1;
   }
 

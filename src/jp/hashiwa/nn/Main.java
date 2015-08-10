@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Hashiwa on 2015/06/29.
@@ -12,12 +13,13 @@ import java.util.List;
 public class Main {
   public static final int MAX_LEARN_LOOP = 1000000;
   Graph graph = new Graph(2, 2, 1);
+  BackPropagation pb = new BackPropagation(graph);
 
   Main() {}
 
   void calcMain(double[][] data) {
     for (double[] d: data) {
-      double actual = calc(d[0], d[1]);
+      double actual = graph.calculate(d[0], d[1])[0];
       System.out.println(d[0] + "," + d[1] + "=" + actual);
     }
   }
@@ -27,7 +29,7 @@ public class Main {
       double x = d[0];
       double y = d[1];
       double expected = d[2];
-      double actual = calc(x, y);
+      double actual = graph.calculate(x, y)[0];
       System.out.println("[" + x + "," + y + "] expected=" + expected + ", actual=" + actual);
     }
 
@@ -37,39 +39,48 @@ public class Main {
       double x = d[0];
       double y = d[1];
       double expected = d[2];
-      double actual = calc(x, y);
+      double actual = graph.calculate(x, y)[0];
       System.out.println("[" + x + "," + y + "] expected=" + expected + ", actual=" + actual);
     }
   }
 
-  void learn(double[][] data) {
-    boolean finished = false;
-    for (int i=0 ; i<MAX_LEARN_LOOP && !finished ; i++) {
-      finished = true;
-      for (double[] d: data) {
-        finished &= learnOne(d[0], d[1], d[2]);
-      }
-    }
+  void learn(double[][] dataAndExpected) {
+//    boolean finished = false;
+//    for (int i=0 ; i<MAX_LEARN_LOOP && !finished ; i++) {
+//      finished = true;
+//      for (double[] d: data) {
+//        finished &= learnOne(d[0], d[1], d[2]);
+//      }
+//    }
+//
+//    System.out.println("finished = " + finished);
 
-    System.out.println("finished = " + finished);
+    List<double[]> data = Arrays.stream(dataAndExpected).
+            map(d -> new double[] {d[0], d[1]}).
+            collect(Collectors.toList());
+    List<Double> expected = Arrays.stream(dataAndExpected).
+            map(d -> new Double(d[0])).
+            collect(Collectors.toList());
+
+    graph.learn(data, expected);
   }
 
-  boolean learnOne(double x, double y, double expected) {
-    setInputs(x, y);
-    return graph.getOutputNode(0).learnUsingExpectedValue(expected);
-  }
-
-  double calc(double x, double y) {
-    setInputs(x, y);
-    return graph.getOutputNode(0).getValue();
-  }
-
-  void setInputs(double x, double y) {
-    NNNode value0 = new NNInputNode(x);
-    NNNode value1 = new NNInputNode(y);
-
-    graph.setInputNodes(value0, value1);
-  }
+//  boolean learnOne(double x, double y, double expected) {
+//    setInputs(x, y);
+//    return graph.getOutputNode(0).learnUsingExpectedValue(expected);
+//  }
+//
+//  double calculate(double x, double y) {
+//    setInputs(x, y);
+//    return graph.getOutputNode(0).getValue();
+//  }
+//
+//  void setInputs(double x, double y) {
+//    NNNode value0 = new NNInputNode(x);
+//    NNNode value1 = new NNInputNode(y);
+//
+//    graph.setInputNodes(value0, value1);
+//  }
 
   public static void main(String[] args) throws Exception {
     Main main = new Main();
