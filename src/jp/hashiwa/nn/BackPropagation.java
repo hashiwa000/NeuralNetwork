@@ -2,6 +2,7 @@ package jp.hashiwa.nn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Created by Hashiwa on 2015/07/31.
@@ -17,24 +18,38 @@ public class BackPropagation implements LearningAlgorithm {
     if (data.size() != expected.size())
       new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
 
+    int leanCnt = 100000;
     int size = data.size();
-    for (int i=0 ; i<size ; i++)
-      learnOne(data.get(i), expected.get(i));
+
+    IntStream.range(0, leanCnt).forEach(k ->
+                    IntStream.range(0, size).forEach(i ->
+                            learnOne(data.get(i), expected.get(i))
+                    )
+    );
   }
 
   public void learnOne(double[] data, double expected) {
     final double K = 0.1;
-    double[][] outputs = getOutputs();
     double[][] e = getEs(expected);
 
-    // outputs and e are known, so let's update weights.
+    // e are known, so let's update weights.
 
-    for (int i=0 ; i<graph.getHiddenNodeLayerSize() ; i++) {
+    for (int j=0 ; j<graph.getOutputNodeNum() ; j++) {
+      NNOutputLayerNode n = graph.getOutputNode(j);
+      double[] w = n.getWeights();
+      for (int k=0 ; k<w.length ; k++) {
+        double actual = n.getInputs()[k].getValue();
+        w[k] += -1 * K * e[e.length-1][j] * actual;
+      }
+    }
+
+    for (int i=graph.getHiddenNodeLayerSize()-1 ; 0<=i ; i--) {
       for (int j=0 ; j<graph.getHiddenNodeNum(i) ; j++) {
         NNLayerNode n = graph.getHiddenNode(i, j);
         double[] w = n.getWeights();
         for (int k=0 ; k<w.length ; k++) {
-          w[k] += -1 * k * e[i][j] * outputs[i][j];
+          double actual = n.getInputs()[k].getValue();
+          w[k] += -1 * K * e[i][j] * actual;
         }
       }
     }

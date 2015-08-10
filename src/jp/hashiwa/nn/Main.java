@@ -59,7 +59,7 @@ public class Main {
             map(d -> new double[] {d[0], d[1]}).
             collect(Collectors.toList());
     List<Double> expected = Arrays.stream(dataAndExpected).
-            map(d -> new Double(d[0])).
+            map(d -> new Double(d[2])).
             collect(Collectors.toList());
 
     graph.learn(data, expected);
