@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
  * Created by Hashiwa on 2015/06/29.
  */
 public class Main {
-  public static final int MAX_LEARN_LOOP = 1000000;
   Graph graph = new Graph(2, 2, 1);
 
   Main() {}
