@@ -1,5 +1,9 @@
 package jp.hashiwa.nn;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -7,10 +11,17 @@ import java.util.stream.IntStream;
  * Created by Hashiwa on 2015/07/31.
  */
 public class BackPropagation implements LearningAlgorithm {
+  private String logFileName;
+  private Writer logWriter;
   private Graph graph;
 
   public BackPropagation(Graph g) {
+    this(g, null);
+  }
+
+  public BackPropagation(Graph g, String logFileName) {
     this.graph = g;
+    this.logFileName = logFileName;
   }
 
   public void learn(List<double[]> data, List<Double> expected ) {
@@ -20,11 +31,52 @@ public class BackPropagation implements LearningAlgorithm {
     int leanCnt = 100000;
     int size = data.size();
 
-    IntStream.range(0, leanCnt).forEach(k ->
-                    IntStream.range(0, size).forEach(i ->
-                            learnOne(data.get(i), expected.get(i))
-                    )
-    );
+    initLogger();
+
+    for (int k=0 ; k<leanCnt ; k++) {
+      IntStream.range(0, size).forEach(i ->
+                      learnOne(data.get(i), expected.get(i))
+      );
+      log(data, expected);
+    }
+
+    closeLogger();
+  }
+
+  private void initLogger() {
+    try {
+      if (logFileName != null)
+        logWriter = new BufferedWriter(new FileWriter(logFileName));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void log(List<double[]> data, List<Double> expected) {
+    if (logWriter == null) return;
+
+    double sum = 0;
+    for (int i=0 ; i<data.size() ; i++) {
+      double diff = graph.calculate(data.get(i))[0] - expected.get(i);
+      sum += Math.abs(diff);
+    }
+
+    try {
+      logWriter.write(sum + "\n");
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  private void closeLogger() {
+    try {
+      if (logWriter != null) {
+        logWriter.flush();
+        logWriter.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void learnOne(double[] data, double expected) {

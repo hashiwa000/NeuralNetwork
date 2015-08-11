@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class Main {
   public static final int MAX_LEARN_LOOP = 1000000;
   Graph graph = new Graph(2, 2, 1);
-  BackPropagation pb = new BackPropagation(graph);
 
   Main() {}
 
