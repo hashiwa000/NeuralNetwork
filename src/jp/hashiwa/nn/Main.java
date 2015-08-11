@@ -25,6 +25,7 @@ public class Main {
   }
 
   void learnMain(double[][] data) {
+    System.out.println("--- before learning ---");
     for (double[] d: data) {
       double x = d[0];
       double y = d[1];
@@ -35,6 +36,7 @@ public class Main {
 
     learn(data);
 
+    System.out.println("--- after learning  ---");
     for (double[] d: data) {
       double x = d[0];
       double y = d[1];
@@ -42,6 +44,8 @@ public class Main {
       double actual = graph.calculate(x, y)[0];
       System.out.println("[" + x + "," + y + "] expected=" + expected + ", actual=" + actual);
     }
+
+    System.out.println("-----------------------");
   }
 
   void learn(double[][] dataAndExpected) {
@@ -80,7 +84,9 @@ public class Main {
       return null;
     }
 
-    System.out.println("=== " + data);
+    System.out.println("=== read from " + datafile);
+    data.stream().forEach(System.out::println);
+    System.out.println("====================");
 
     return toArray(data);
   }

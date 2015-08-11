@@ -43,8 +43,7 @@ public class Graph {
   }
 
   public double[] calculate(double... v) {
-    double[] ret = new double[getOutputNodeNum()];
-    NNNode[] inputs = (NNNode[]) Arrays.stream(v).
+    NNNode[] inputs = Arrays.stream(v).
                     mapToObj(NNInputNode::new).
                     toArray(value -> new NNNode[value]);
 
