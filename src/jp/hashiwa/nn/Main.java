@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
  * Created by Hashiwa on 2015/06/29.
  */
 public class Main {
-  Graph graph = new Graph(2, 2, 1);
+  private Graph graph = new Graph(2, 2, 1);
 
-  Main() {}
+  public Main() {}
 
   void calcMain(double[][] data) {
     for (double[] d: data) {
@@ -22,7 +22,7 @@ public class Main {
     }
   }
 
-  void learnMain(double[][] data) {
+  public void learnMain(double[][] data) {
     System.out.println("--- before learning ---");
     for (double[] d: data) {
       double x = d[0];
@@ -57,13 +57,17 @@ public class Main {
     graph.learn(data, expected);
   }
 
+  public Graph getGraph() {
+    return graph;
+  }
+
   public static void main(String[] args) throws Exception {
     Main main = new Main();
     main.learnMain(readData("learn.txt", 3));
     main.calcMain(readData("data.txt", 2));
   }
 
-  private static double[][] readData(String datafile, int elemNum) {
+  public static double[][] readData(String datafile, int elemNum) {
     List<List<Double>> data = new ArrayList<>();
     String line;
     String[] elems;
