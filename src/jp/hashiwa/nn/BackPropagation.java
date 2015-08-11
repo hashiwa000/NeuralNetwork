@@ -29,8 +29,10 @@ public class BackPropagation implements LearningAlgorithm {
 
   public void learnOne(double[] data, double expected) {
     final double K = 0.1;
-    graph.setInputNodes(data);
-    double[][] e = getEs(expected);
+    double[][] e;
+
+    graph.setInputValues(data);
+    e = getEs(expected);
 
     // e are known, so let's update weights.
 
