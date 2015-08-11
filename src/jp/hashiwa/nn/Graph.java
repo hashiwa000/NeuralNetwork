@@ -43,11 +43,7 @@ public class Graph {
   }
 
   public double[] calculate(double... v) {
-    NNNode[] inputs = Arrays.stream(v).
-                    mapToObj(NNInputNode::new).
-                    toArray(value -> new NNNode[value]);
-
-    setInputNodes(inputs);
+    setInputValues(v);
 
     return IntStream.range(0, getOutputNodeNum()).
             mapToDouble(i -> getOutputNode(i).getValue()).
@@ -79,6 +75,14 @@ public class Graph {
   }
   public NNOutputLayerNode getOutputNode(int index) {
     return (NNOutputLayerNode)nodes[nodes.length-1][index];
+  }
+
+  public void setInputValues(double... values) {
+    NNNode[] inputs = Arrays.stream(values).
+            mapToObj(NNInputNode::new).
+            toArray(value -> new NNNode[value]);
+
+    setInputNodes(inputs);
   }
 
   public void setInputNodes(NNNode... newNodes) {
