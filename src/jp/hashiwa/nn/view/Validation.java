@@ -5,6 +5,7 @@ import jp.hashiwa.nn.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 
 /**
  * Created by Hashiwa on 2015/08/11.
@@ -16,7 +17,7 @@ public class Validation extends JFrame {
 
   Validation() {
     Main main = new Main();
-//    main.learnMain(main.readData("learn.txt", 3));
+    main.learnMain(main.readData("learn.txt", 3));
     graph = main.getGraph();
 
     Container c = getContentPane();
@@ -32,19 +33,22 @@ public class Validation extends JFrame {
   }
 
   private class Canvas extends JPanel {
+    private final int MAX = 10;
+    private final DecimalFormat formatter = new DecimalFormat("00.00");
+
     @Override
     public void paint(Graphics g) {
       g.setColor(Color.white);
       g.fillRect(0, 0, width, height);
 
-      for (int i=0 ; i<10 ; i++) {
-        for (int j=0 ; j<10 ; j++) {
-          double x = (double)i / 10;
-          double y = (double)j / 10;
+      for (int i=0 ; i<width ; i++) {
+        for (int j=0 ; j<height ; j++) {
+          double x = (double)i / width * MAX;
+          double y = (double)j / height * MAX;
 
-          Color c;
           graph.setInputValues(x, y);
           double v = graph.getOutputNode(0).getValue();
+          Color c = getColor(v);
 
 //          double rnd = Math.random();
 //          if (rnd < 0.25) v = -1;
@@ -52,19 +56,22 @@ public class Validation extends JFrame {
 //          else if (rnd < 0.75) v = 0.7;
 //          else v = 1.2;
 
-
-          if (v < 0) c = Color.yellow;
-          else if (v < 0.5) c = Color.red;
-          else if (v < 1.0) c = Color.blue;
-          else c = Color.green;
-
-          System.out.println(i + ", " + j + " = " + v);
+          System.out.println(
+                  formatter.format(x) + ", " +
+                  formatter.format(y) + " = " +
+                  formatter.format(v));
 
           g.setColor(c);
-          g.fillRect(i * 10, j * 10, 10, 10);
-
+          g.fillRect(i, height - j, 1, 1);
         }
       }
+    }
+
+    private Color getColor(double v) {
+      if (v < 0)   return Color.yellow;
+      if (v < 0.5) return Color.red;
+      if (v < 1.0) return Color.blue;
+      return Color.green;
     }
   }
 }
