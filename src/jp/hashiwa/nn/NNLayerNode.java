@@ -3,7 +3,7 @@ package jp.hashiwa.nn;
 /**
  * Created by Hashiwa on 2015/06/29.
  */
-public abstract class NNLayerNode extends NNNode {
+public class NNLayerNode extends NNNode {
   private final NNNode[] inputs;
   private final double[] weights;
 //  private Double cache = null;

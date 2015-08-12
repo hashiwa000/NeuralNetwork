@@ -89,7 +89,7 @@ public class BackPropagation implements LearningAlgorithm {
     // e are known, so let's update weights.
 
     for (int j=0 ; j<graph.getOutputNodeNum() ; j++) {
-      NNOutputLayerNode n = graph.getOutputNode(j);
+      NNLayerNode n = graph.getOutputNode(j);
       double[] w = n.getWeights();
       for (int k=0 ; k<w.length ; k++) {
         double actual = n.getInputs()[k].getValue();
@@ -128,13 +128,13 @@ public class BackPropagation implements LearningAlgorithm {
     return e;
   }
   private double e(int outNodeIndex, double expected) {
-    NNOutputLayerNode n = graph.getOutputNode(outNodeIndex);
+    NNLayerNode n = graph.getOutputNode(outNodeIndex);
     double actual = n.getValue();
     return (actual - expected) * actual * (1 - actual);
   }
 
   private double e(int hiddenLayerIndex, int hiddenNodeIndex, double[] e) {
-    NNHiddenLayerNode node = graph.getHiddenNode(hiddenLayerIndex, hiddenNodeIndex);
+    NNLayerNode node = graph.getHiddenNode(hiddenLayerIndex, hiddenNodeIndex);
     double actual = node.getValue();
 
     int nextLayerIndex = hiddenLayerIndex + 1;

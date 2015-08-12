@@ -63,18 +63,18 @@ public class Graph {
 
     return nodes[jIndex].length;
   }
-  public NNHiddenLayerNode getHiddenNode(int jIndex, int iIndex) {
+  public NNLayerNode getHiddenNode(int jIndex, int iIndex) {
     if (getHiddenNodeLayerSize() < jIndex)
       throw new IndexOutOfBoundsException(Integer.toString(jIndex));
 
-    return (NNHiddenLayerNode)nodes[jIndex][iIndex];
+    return (NNLayerNode)nodes[jIndex][iIndex];
   }
 
   public int getOutputNodeNum() {
     return nodes[nodes.length-1].length;
   }
-  public NNOutputLayerNode getOutputNode(int index) {
-    return (NNOutputLayerNode)nodes[nodes.length-1][index];
+  public NNLayerNode getOutputNode(int index) {
+    return (NNLayerNode)nodes[nodes.length-1][index];
   }
 
   public void setInputValues(double... values) {
@@ -94,23 +94,23 @@ public class Graph {
   private NNNode[] createNodes(int dimension, NNNode[] nextNodes) {
     NNNode[] nodes = new NNNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNHiddenLayerNode(nextNodes);
+      nodes[i] = new NNLayerNode(nextNodes);
 
     return nodes;
   }
 
-  private NNHiddenLayerNode[] createHiddenLayerNodes(int beforeDimension, int dimension) {
-    NNHiddenLayerNode[] nodes = new NNHiddenLayerNode[dimension];
+  private NNLayerNode[] createHiddenLayerNodes(int beforeDimension, int dimension) {
+    NNLayerNode[] nodes = new NNLayerNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNHiddenLayerNode(beforeDimension);
+      nodes[i] = new NNLayerNode(beforeDimension);
 
     return nodes;
   }
 
-  private NNOutputLayerNode[] createOutputLayerNodes(int dimension, NNNode[] nextNodes) {
-    NNOutputLayerNode[] nodes = new NNOutputLayerNode[dimension];
+  private NNLayerNode[] createOutputLayerNodes(int dimension, NNNode[] nextNodes) {
+    NNLayerNode[] nodes = new NNLayerNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNOutputLayerNode(nextNodes);
+      nodes[i] = new NNLayerNode(nextNodes);
 
     return nodes;
   }
