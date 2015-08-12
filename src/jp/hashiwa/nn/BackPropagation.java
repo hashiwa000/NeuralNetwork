@@ -11,29 +11,32 @@ import java.util.stream.IntStream;
  * Created by Hashiwa on 2015/07/31.
  */
 public class BackPropagation implements LearningAlgorithm {
+  public static final int DEFAULT_LEARNING_COUNT = 100000;
+
   private String logFileName;
   private Writer logWriter;
   private Graph graph;
+  private int learningCount;
 
   public BackPropagation(Graph g) {
-    this(g, null);
+    this(g, null, DEFAULT_LEARNING_COUNT);
   }
 
-  public BackPropagation(Graph g, String logFileName) {
+  public BackPropagation(Graph g, String logFileName, int learningCount) {
     this.graph = g;
     this.logFileName = logFileName;
+    this.learningCount = learningCount;
   }
 
   public void learn(List<double[]> data, List<Double> expected ) {
     if (data.size() != expected.size())
       new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
 
-    int leanCnt = 100000;
     int size = data.size();
 
     initLogger();
 
-    for (int k=0 ; k<leanCnt ; k++) {
+    for (int k=0 ; k<learningCount ; k++) {
       IntStream.range(0, size).forEach(i ->
                       learnOne(data.get(i), expected.get(i))
       );

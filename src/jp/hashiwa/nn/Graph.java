@@ -9,7 +9,8 @@ import java.util.stream.IntStream;
  */
 public class Graph {
   private final NNNode[][] nodes;
-  private final LearningAlgorithm alg = new BackPropagation(this, "learning.csv");
+  private final LearningAlgorithm alg =
+          new BackPropagation(this, "learning.csv", BackPropagation.DEFAULT_LEARNING_COUNT);
 
   /**
    * dimension is
