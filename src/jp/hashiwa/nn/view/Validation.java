@@ -99,10 +99,10 @@ public class Validation extends JFrame implements Runnable {
 //              { 5, 9 },
 //              { 9, 2 },
 //      };
-
-      g.setColor(Color.black);
-      for (double[] p: data)
-        g.fillRect((int)(p[0] / MAX * width),(int)(height - (p[1] / MAX * height)), 1, 1);
+//
+//      g.setColor(Color.black);
+//      for (double[] p: data)
+//        g.fillRect((int)(p[0] / MAX * width),(int)(height - (p[1] / MAX * height)), 1, 1);
     }
 
     private Color getColor(double v) {
