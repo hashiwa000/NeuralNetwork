@@ -11,14 +11,15 @@ public class NNLayerNode extends NNNode {
   public NNLayerNode(int nodeNum) {
     this(new NNNode[nodeNum]);
   }
+
   public NNLayerNode(NNNode[] inputs) {
-    this.inputs = new NNNode[inputs.length+1];
+    this.inputs = new NNNode[inputs.length + 1];
     this.inputs[0] = new NNInputNode(1);
-    for (int i=0 ; i<inputs.length ; i++)
-      this.inputs[i+1] = inputs[i];
+    for (int i = 0; i < inputs.length; i++)
+      this.inputs[i + 1] = inputs[i];
 
     this.weights = new double[this.inputs.length];
-    for (int i=0 ; i<this.weights.length ; i++)
+    for (int i = 0; i < this.weights.length; i++)
       weights[i] = 2 * Math.random() - 1;
   }
 
@@ -27,7 +28,7 @@ public class NNLayerNode extends NNNode {
 //    if (cache != null) return cache;
 
     double v = 0;
-    for (int i=0 ; i<inputs.length ; i++) {
+    for (int i = 0; i < inputs.length; i++) {
       double w = weights[i];
       double x = inputs[i].getValue();
       v += w * x;
@@ -51,8 +52,8 @@ public class NNLayerNode extends NNNode {
 //    clearCache();
   }
 
-  public void setInputNodes(NNNode ... nodes) {
-    for (int i=0 ; i<nodes.length ; i++)
+  public void setInputNodes(NNNode... nodes) {
+    for (int i = 0; i < nodes.length; i++)
       setInputNode(i, nodes[i]);
   }
 
@@ -70,5 +71,27 @@ public class NNLayerNode extends NNNode {
 
   protected double sigmoid(double x) {
     return 1 / (1 + Math.exp(-x));
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(getClass().getSimpleName()).append(" ");
+
+    for (int i=0 ; i<inputs.length ; i++) {
+      NNNode n = inputs[i];
+
+      sb.append(i).append(": ");
+
+      sb.append(weights[i]).append("=");
+
+      if (n == null) sb.append("null");
+      else sb.append("{").append(n.toString()).append("}");
+
+      if (i != inputs.length-1)
+        sb.append(", ");
+    }
+
+    return sb.toString();
   }
 }

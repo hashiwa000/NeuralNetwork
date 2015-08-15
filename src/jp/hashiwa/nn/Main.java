@@ -11,9 +11,13 @@ import java.util.stream.Collectors;
  * Created by Hashiwa on 2015/06/29.
  */
 public class Main {
-  private Graph graph = new Graph(2, 2, 1);
+  private Graph graph;
+  private LearningAlgorithm alg;
 
-  public Main() {}
+  public Main(Graph graph, LearningAlgorithm alg) {
+    this.graph = graph;
+    this.alg = alg;
+  }
 
   void calcMain(double[][] data) {
     for (double[] d: data) {
@@ -54,7 +58,7 @@ public class Main {
             map(d -> new Double(d[2])).
             collect(Collectors.toList());
 
-    graph.learn(data, expected);
+    graph.learn(alg, data, expected);
   }
 
   public Graph getGraph() {
@@ -62,7 +66,9 @@ public class Main {
   }
 
   public static void main(String[] args) throws Exception {
-    Main main = new Main();
+    Graph graph = new Graph(2, 2, 1);
+    LearningAlgorithm alg = new BackPropagation(graph, "learning.csv", BackPropagation.DEFAULT_LEARNING_COUNT);
+    Main main = new Main(graph, alg);
     main.learnMain(readData("learn.txt", 3));
     main.calcMain(readData("data.txt", 2));
   }

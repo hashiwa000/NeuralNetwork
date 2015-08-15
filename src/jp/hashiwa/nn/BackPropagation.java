@@ -22,6 +22,14 @@ public class BackPropagation implements LearningAlgorithm {
     this(g, null, DEFAULT_LEARNING_COUNT);
   }
 
+  public BackPropagation(Graph g, String logFileName) {
+    this(g, logFileName, DEFAULT_LEARNING_COUNT);
+  }
+
+  public BackPropagation(Graph g, int learningCount) {
+    this(g, null, learningCount);
+  }
+
   public BackPropagation(Graph g, String logFileName, int learningCount) {
     this.graph = g;
     this.logFileName = logFileName;
@@ -155,6 +163,7 @@ public class BackPropagation implements LearningAlgorithm {
 
     for (int i=e.length-2 ; 0<=i ; i--) {
       e[i] = new double[graph.getHiddenNodeNum(i)];
+
       for (int j=0 ; j<e[i].length ; j++)
         e[i][j] = e(i, j, e[i+1]);
     }
@@ -170,14 +179,15 @@ public class BackPropagation implements LearningAlgorithm {
   private double e(int hiddenLayerIndex, int hiddenNodeIndex, double[] e) {
     NNLayerNode node = graph.getHiddenNode(hiddenLayerIndex, hiddenNodeIndex);
     double actual = node.getValue();
-
     int nextLayerIndex = hiddenLayerIndex + 1;
+    int weightIndex = hiddenNodeIndex + 1;  // "+1" is for bias node
+
     double sum = 0;
     for (int i=0 ; i<e.length ; i++) {
       NNLayerNode nextNode = nextLayerIndex < graph.getHiddenNodeLayerSize() ?
               graph.getHiddenNode(nextLayerIndex, i) :
               graph.getOutputNode(i);
-      sum += e[i] * nextNode.getWeights()[hiddenNodeIndex];
+      sum += e[i] * nextNode.getWeights()[weightIndex];
     }
 
     return sum * actual * (1 - actual);

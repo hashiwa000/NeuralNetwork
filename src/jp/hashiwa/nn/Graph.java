@@ -9,8 +9,7 @@ import java.util.stream.IntStream;
  */
 public class Graph {
   private final NNNode[][] nodes;
-  private final LearningAlgorithm alg =
-          new BackPropagation(this, "learning.csv", BackPropagation.DEFAULT_LEARNING_COUNT);
+  private LearningAlgorithm alg;
 
   /**
    * dimension is
@@ -51,7 +50,7 @@ public class Graph {
             toArray();
   }
 
-  public void learn(List<double[]> data, List<Double> expected) {
+  public void learn(LearningAlgorithm alg, List<double[]> data, List<Double> expected) {
     alg.learn(data, expected);
   }
 
@@ -116,4 +115,23 @@ public class Graph {
     return nodes;
   }
 
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    NNNode[] outputNodes = nodes[nodes.length-1];
+
+    for (int i=0 ; i<outputNodes.length ; i++) {
+      NNNode n = outputNodes[i];
+
+      sb.append(i).append(": ");
+
+      if (n == null) sb.append("null");
+      else sb.append("{").append(n.toString()).append("}");
+
+      if (i != outputNodes.length-1)
+        sb.append(", ");
+    }
+
+    return sb.toString();
+  }
 }

@@ -13,4 +13,14 @@ public class NNInputNode extends NNNode {
   public double getValue() {
     return value;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(getClass().getSimpleName()).append(" ");
+
+    sb.append(value);
+
+    return sb.toString();
+  }
 }
