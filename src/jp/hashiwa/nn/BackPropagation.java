@@ -12,30 +12,39 @@ import java.util.stream.IntStream;
  */
 public class BackPropagation implements LearningAlgorithm {
   public static final int DEFAULT_LEARNING_COUNT = 1000000;
+  public static final double DEFAULT_MAX_DIFF = 0.1;
   private static final boolean DEBUG = true;
 
-  private final double MAX_DIFF = 0.1;
   private String logFileName;
   private Writer logWriter;
   private Graph graph;
   private int maxLearningCount;
+  private double maxDiff;
 
   public BackPropagation(Graph g) {
-    this(g, null, DEFAULT_LEARNING_COUNT);
+    this(g, null, DEFAULT_LEARNING_COUNT, DEFAULT_MAX_DIFF);
   }
 
   public BackPropagation(Graph g, String logFileName) {
-    this(g, logFileName, DEFAULT_LEARNING_COUNT);
+    this(g, logFileName, DEFAULT_LEARNING_COUNT, DEFAULT_MAX_DIFF);
   }
 
-  public BackPropagation(Graph g, int maxLearningCount) {
-    this(g, null, maxLearningCount);
+  public BackPropagation(Graph g, int maxLearningCount, double maxDiff) {
+    this(g, null, maxLearningCount, maxDiff);
   }
 
-  public BackPropagation(Graph g, String logFileName, int maxLearningCount) {
+  /**
+   * Constructor.
+   * @param g target Graph
+   * @param logFileName log file name. If null, logging is disabled.
+   * @param maxLearningCount max count of learning loop.
+   * @param maxDiff max difference for terminating learning loop. If negative value, termination is disabled.
+   */
+  public BackPropagation(Graph g, String logFileName, int maxLearningCount, double maxDiff) {
     this.graph = g;
     this.logFileName = logFileName;
     this.maxLearningCount = maxLearningCount;
+    this.maxDiff = maxDiff;
   }
 
   public void learn(List<double[]> data, List<Double> expected ) {
@@ -60,14 +69,14 @@ public class BackPropagation implements LearningAlgorithm {
 
       log(diff);
 
-      if (diff < MAX_DIFF) finished = true;
+      if (0 <= maxDiff && diff < maxDiff) finished = true;
     }
 
     closeLogger();
 
     if (DEBUG) {
-      if (!finished) {
-        System.out.println("*** Learning is not complete. Average difference is " + diff + "(max is " + MAX_DIFF + ").");
+      if (0 <= maxDiff && !finished) {
+        System.out.println("*** Learning is not complete. Average difference is " + diff + "(max is " + maxDiff + ").");
       }
       System.out.println("*** Learned graph is " + graph);
     }

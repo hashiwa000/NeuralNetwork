@@ -20,7 +20,7 @@ public class Validation extends JFrame implements Runnable {
 
   Validation() {
     Graph graph = new Graph(2, 2, 1);
-    LearningAlgorithm alg = new BackPropagation(graph, 10000);
+    LearningAlgorithm alg = new BackPropagation(graph, 10000, -1);
     main = new Main(graph, alg);
 
     setLayout(new FlowLayout());
