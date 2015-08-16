@@ -11,12 +11,14 @@ import java.util.stream.IntStream;
  * Created by Hashiwa on 2015/07/31.
  */
 public class BackPropagation implements LearningAlgorithm {
-  public static final int DEFAULT_LEARNING_COUNT = 100000;
+  public static final int DEFAULT_LEARNING_COUNT = 1000000;
+  private static final boolean DEBUG = true;
 
+  private final double MAX_DIFF = 0.1;
   private String logFileName;
   private Writer logWriter;
   private Graph graph;
-  private int learningCount;
+  private int maxLearningCount;
 
   public BackPropagation(Graph g) {
     this(g, null, DEFAULT_LEARNING_COUNT);
@@ -26,32 +28,49 @@ public class BackPropagation implements LearningAlgorithm {
     this(g, logFileName, DEFAULT_LEARNING_COUNT);
   }
 
-  public BackPropagation(Graph g, int learningCount) {
-    this(g, null, learningCount);
+  public BackPropagation(Graph g, int maxLearningCount) {
+    this(g, null, maxLearningCount);
   }
 
-  public BackPropagation(Graph g, String logFileName, int learningCount) {
+  public BackPropagation(Graph g, String logFileName, int maxLearningCount) {
     this.graph = g;
     this.logFileName = logFileName;
-    this.learningCount = learningCount;
+    this.maxLearningCount = maxLearningCount;
   }
 
   public void learn(List<double[]> data, List<Double> expected ) {
     if (data.size() != expected.size())
       new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
 
-    int size = data.size();
+    final int size = data.size();
+    boolean finished = false;
+    double diff = -1;
 
     initLogger();
 
-    for (int k=0 ; k<learningCount ; k++) {
+    for (int k=0 ; k<maxLearningCount && !finished ; k++) {
       IntStream.range(0, size).forEach(i ->
                       learnOne(data.get(i), expected.get(i))
       );
-      log(data, expected);
+
+      diff = IntStream.range(0, size)
+              .mapToDouble(i ->
+                              Math.abs(graph.calculate(data.get(i))[0] - expected.get(i))
+              ).sum() / size;
+
+      log(diff);
+
+      if (diff < MAX_DIFF) finished = true;
     }
 
     closeLogger();
+
+    if (DEBUG) {
+      if (!finished) {
+        System.out.println("*** Learning is not complete. Average difference is " + diff + "(max is " + MAX_DIFF + ").");
+      }
+      System.out.println("*** Learned graph is " + graph);
+    }
   }
 
   private void initLogger() {
@@ -63,17 +82,11 @@ public class BackPropagation implements LearningAlgorithm {
     }
   }
 
-  private void log(List<double[]> data, List<Double> expected) {
+  private void log(double diff) {
     if (logWriter == null) return;
 
-    double sum = 0;
-    for (int i=0 ; i<data.size() ; i++) {
-      double diff = graph.calculate(data.get(i))[0] - expected.get(i);
-      sum += Math.abs(diff);
-    }
-
     try {
-      logWriter.write(sum + "\n");
+      logWriter.write(diff + "\n");
     } catch(IOException ex) {
       ex.printStackTrace();
     }

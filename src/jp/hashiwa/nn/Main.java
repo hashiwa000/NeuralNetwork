@@ -67,7 +67,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     Graph graph = new Graph(2, 2, 1);
-    LearningAlgorithm alg = new BackPropagation(graph, "learning.csv", BackPropagation.DEFAULT_LEARNING_COUNT);
+    LearningAlgorithm alg = new BackPropagation(graph, "learning.csv");
     Main main = new Main(graph, alg);
     main.learnMain(readData("learn.txt", 3));
     main.calcMain(readData("data.txt", 2));
