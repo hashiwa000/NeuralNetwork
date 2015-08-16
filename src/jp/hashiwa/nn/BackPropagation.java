@@ -47,11 +47,11 @@ public class BackPropagation implements LearningAlgorithm {
     this.maxDiff = maxDiff;
   }
 
-  public void learn(List<double[]> data, List<Double> expected ) {
-    if (data.size() != expected.size())
-      new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
+  public void learn(List<double[]> data, List<double[]> expected ) {
+    validate(data, expected);
 
     final int size = data.size();
+    final int dim = data.get(0).length;
     boolean finished = false;
     double diff = -1;
 
@@ -64,8 +64,10 @@ public class BackPropagation implements LearningAlgorithm {
 
       diff = IntStream.range(0, size)
               .mapToDouble(i ->
-                              Math.abs(graph.calculate(data.get(i))[0] - expected.get(i))
-              ).sum() / size;
+                      IntStream.range(0, expected.get(i).length)
+                      .mapToDouble(j -> Math.abs(graph.calculate(data.get(i))[j] - expected.get(i)[j]))
+                      .sum()
+              ).sum() / (size * dim);
 
       log(diff);
 
@@ -80,6 +82,15 @@ public class BackPropagation implements LearningAlgorithm {
       }
       System.out.println("*** Learned graph is " + graph);
     }
+  }
+
+  private void validate(List<double[]> data, List<double[]> expected ) {
+    if (data.size() != expected.size())
+      new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
+
+    for (int i=0 ; i<data.size() ; i++)
+      if (data.get(i).length != expected.get(i).length)
+        new IllegalArgumentException("data dimension at " + i + " is invalid. " + data.get(i).length + ", " + expected.get(i).length);
   }
 
   private void initLogger() {
@@ -112,7 +123,7 @@ public class BackPropagation implements LearningAlgorithm {
     }
   }
 
-  public void learnOne(double[] data, double expected) {
+  private void learnOne(double[] data, double[] expected) {
     final double K = 0.1;
     double[][] e;
 
@@ -142,7 +153,7 @@ public class BackPropagation implements LearningAlgorithm {
     }
   }
 
-  private double[][] getEs(double expected) {
+  private double[][] getEs(double[] expected) {
     double[][] e = new double[graph.getHiddenNodeLayerSize()+1][];
 
     if (graph.getOutputNodeNum() != 1) {
@@ -150,7 +161,8 @@ public class BackPropagation implements LearningAlgorithm {
     }
 
     e[e.length-1] = new double[1];
-    e[e.length-1][0] = e(0, expected);
+    for (int i=0 ; i<expected.length ; i++)
+      e[e.length-1][i] = e(i, expected[i]);
 
     for (int i=e.length-2 ; 0<=i ; i--) {
       e[i] = new double[graph.getHiddenNodeNum(i)];

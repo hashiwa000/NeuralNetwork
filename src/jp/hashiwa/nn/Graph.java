@@ -50,7 +50,7 @@ public class Graph {
             toArray();
   }
 
-  public void learn(LearningAlgorithm alg, List<double[]> data, List<Double> expected) {
+  public void learn(LearningAlgorithm alg, List<double[]> data, List<double[]> expected) {
     alg.learn(data, expected);
   }
 
