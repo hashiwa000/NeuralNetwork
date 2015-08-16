@@ -105,14 +105,10 @@ public class BackPropagation implements LearningAlgorithm {
 
   public void learnOne(double[] data, double expected) {
     final double K = 0.1;
-    double[][] v;
     double[][] e;
 
     graph.setInputValues(data);
-    v = getActualValues();
     e = getEs(expected);
-
-    validateArraySize(v, e);
 
     // e are known, so let's update weights.
 
@@ -135,33 +131,6 @@ public class BackPropagation implements LearningAlgorithm {
         }
       }
     }
-  }
-
-  private void validateArraySize(double[][] a, double[][] b) {
-    if (a.length != b.length) throw new Error("fatal : " + a.length + ", " + b.length);
-    for (int i=0 ; i<a.length ; i++)
-      if (a[i].length != b[i].length)
-        throw new Error("fatal in " + i + " : " + a[i].length + ", " + b[i].length);
-  }
-
-  private double[][] getActualValues() {
-    double[][] values = new double[graph.getHiddenNodeLayerSize()+1][];
-
-    values[values.length-1] = new double[graph.getOutputNodeNum()];
-    for (int j=0 ; j<values[values.length-1].length ; j++) {
-      NNNode n = graph.getOutputNode(j);
-      values[values.length - 1][j] = n.getValue();
-    }
-
-    for (int i=0 ; i<values.length-1 ; i++) {
-      values[i] = new double[graph.getHiddenNodeNum(i)];
-      for (int j=0 ; j<values[i].length ; j++) {
-        NNNode n = graph.getHiddenNode(i, j);
-        values[i][j] = n.getValue();
-      }
-    }
-
-    return values;
   }
 
   private double[][] getEs(double expected) {
