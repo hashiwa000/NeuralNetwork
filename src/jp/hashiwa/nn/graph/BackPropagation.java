@@ -156,11 +156,7 @@ public class BackPropagation implements LearningAlgorithm {
   private double[][] getEs(double[] expected) {
     double[][] e = new double[graph.getHiddenNodeLayerSize()+1][];
 
-    if (graph.getOutputNodeNum() != 1) {
-      throw new RuntimeException("not support output node num : " + graph.getOutputNodeNum());
-    }
-
-    e[e.length-1] = new double[1];
+    e[e.length-1] = new double[expected.length];
     for (int i=0 ; i<expected.length ; i++)
       e[e.length-1][i] = e(i, expected[i]);
 
