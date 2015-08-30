@@ -1,8 +1,8 @@
 package jp.hashiwa.nn.view;
 
-import jp.hashiwa.nn.BackPropagation;
-import jp.hashiwa.nn.Graph;
-import jp.hashiwa.nn.LearningAlgorithm;
+import jp.hashiwa.nn.graph.BackPropagation;
+import jp.hashiwa.nn.graph.Graph;
+import jp.hashiwa.nn.graph.LearningAlgorithm;
 import jp.hashiwa.nn.Main;
 
 import javax.swing.*;

@@ -1,5 +1,9 @@
 package jp.hashiwa.nn;
 
+import jp.hashiwa.nn.graph.BackPropagation;
+import jp.hashiwa.nn.graph.Graph;
+import jp.hashiwa.nn.graph.LearningAlgorithm;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
