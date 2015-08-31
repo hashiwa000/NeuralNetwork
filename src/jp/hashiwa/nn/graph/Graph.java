@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
  * Created by Hashiwa on 2015/07/12.
  */
 public class Graph {
+  public static boolean NOT_USE_CACHED_NODE = Boolean.getBoolean("jp.hashiwa.nn.graph.notUseCachedNode");
   private final NNNode[][] nodes;
   private LearningAlgorithm alg;
 
@@ -86,6 +87,12 @@ public class Graph {
   }
 
   public void setInputNodes(NNNode... newNodes) {
+    for (int i=0 ; i<getOutputNodeNum() ; i++) {
+      NNLayerNode n = getOutputNode(i);
+      if (n instanceof NNCachableLayerNode)
+        ((NNCachableLayerNode)n).clearFollowingNodesCache();
+    }
+
     for (NNNode target: nodes[0]) {
       ((NNLayerNode)target).setInputNodes(newNodes);
     }
@@ -94,7 +101,9 @@ public class Graph {
   private NNNode[] createNodes(int dimension, NNNode[] nextNodes) {
     NNNode[] nodes = new NNNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNLayerNode(nextNodes);
+      nodes[i] = NOT_USE_CACHED_NODE ?
+              new NNLayerNode(nextNodes) :
+              new NNCachableLayerNode(nextNodes);
 
     return nodes;
   }
@@ -102,7 +111,9 @@ public class Graph {
   private NNLayerNode[] createHiddenLayerNodes(int beforeDimension, int dimension) {
     NNLayerNode[] nodes = new NNLayerNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNLayerNode(beforeDimension);
+      nodes[i] = NOT_USE_CACHED_NODE ?
+              new NNLayerNode(beforeDimension) :
+              new NNCachableLayerNode(beforeDimension);
 
     return nodes;
   }
@@ -110,7 +121,9 @@ public class Graph {
   private NNLayerNode[] createOutputLayerNodes(int dimension, NNNode[] nextNodes) {
     NNLayerNode[] nodes = new NNLayerNode[dimension];
     for (int i=0 ; i<nodes.length ; i++)
-      nodes[i] = new NNLayerNode(nextNodes);
+      nodes[i] = NOT_USE_CACHED_NODE ?
+              new NNLayerNode(nextNodes) :
+              new NNCachableLayerNode(nextNodes);
 
     return nodes;
   }
