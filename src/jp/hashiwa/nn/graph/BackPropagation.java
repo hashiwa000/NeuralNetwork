@@ -48,8 +48,6 @@ public class BackPropagation implements LearningAlgorithm {
   }
 
   public void learn(List<double[]> data, List<double[]> expected ) {
-    validate(data, expected);
-
     final int size = data.size();
     final int dim = data.get(0).length;
     boolean finished = false;
@@ -81,29 +79,6 @@ public class BackPropagation implements LearningAlgorithm {
         System.out.println("*** Learning is not complete. Average difference is " + diff + "(max is " + maxDiff + ").");
       }
       System.out.println("*** Learned graph is " + graph);
-    }
-  }
-
-  private void validate(List<double[]> data, List<double[]> expected ) {
-    if (data.size() != expected.size())
-      new IllegalArgumentException("data length is invalid. " + data.size() + ", " + expected.size());
-
-    for (int i=0 ; i<data.size() ; i++)
-      if (data.get(i).length != expected.get(i).length)
-        new IllegalArgumentException("data dimension at " + i + " is invalid. " + data.get(i).length + ", " + expected.get(i).length);
-
-    if (data.size() != 0) {
-      int dataLen = data.get(0).length;
-      int nodeLen = graph.getHiddenNodeNum(0);
-      if (nodeLen != dataLen)
-        throw new RuntimeException("Illegal data length : expected=" + nodeLen + ", actual=" + dataLen);
-    }
-
-    if (expected.size() != 0) {
-      int expectedLen = expected.get(0).length;
-      int nodeLen = graph.getOutputNodeNum();
-      if (nodeLen != expectedLen)
-        throw new RuntimeException("Illegal expected data length : expected=" + nodeLen + ", actual=" + expectedLen);
     }
   }
 
