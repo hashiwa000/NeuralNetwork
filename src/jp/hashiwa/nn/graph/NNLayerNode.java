@@ -1,9 +1,13 @@
 package jp.hashiwa.nn.graph;
 
+import java.util.stream.IntStream;
+
 /**
  * Created by Hashiwa on 2015/06/29.
  */
 public class NNLayerNode extends NNNode {
+  private static final boolean PARALLEL = false;
+
   private final NNNode[] inputs;
   private final double[] weights;
 
@@ -25,11 +29,20 @@ public class NNLayerNode extends NNNode {
   @Override
   public double getValue() {
     double v = 0;
-    for (int i = 0; i < inputs.length; i++) {
-      double w = weights[i];
-      double x = inputs[i].getValue();
-      v += w * x;
+
+    if (PARALLEL) {
+      v = IntStream.range(0, inputs.length)
+              .parallel()
+              .mapToDouble(i -> inputs[i].getValue() * weights[i])
+              .sum();
+    } else {
+      for (int i = 0; i < inputs.length; i++) {
+        double w = weights[i];
+        double x = inputs[i].getValue();
+        v += w * x;
+      }
     }
+
     v = sigmoid(v);
 
     return v;
